@@ -41,6 +41,10 @@ module.exports = {
   },
   css: [
     '~assets/main.scss'
+  ],
+
+  plugins: [
+    { src: '~/plugins/vue-notification', ssr: false }
   ]
 }
 

@@ -37,6 +37,13 @@
   },
   methods: {
     async registrationSubmit() {
+
+      this.$el.querySelector('form')
+        .querySelectorAll('small')
+        .forEach((el) => {
+          el.remove()
+        })
+
       await this.$store.dispatch('user/register', this.form)
         .then(this.success)
         .catch(this.error)
@@ -46,7 +53,8 @@
       this.form.password = ''
       this.form.password_confirm = ''
       
-      this.$router.push('/')
+      this.$notify({ group: 'alerts', text: 'You are successfully registered' })
+      this.$router.push('/login')
     },
     error(data) {
       if (data.request.status == 422) {
@@ -58,7 +66,7 @@
         }
 
       } else {
-
+        this.$notify({ group: 'alerts', text: 'Something went wrong. Please try again later.' })
       }
     },
     clearError(event) {
