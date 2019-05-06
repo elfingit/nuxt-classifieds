@@ -41,10 +41,12 @@
         .then(this.success)
         .catch(this.error)
     },
-    sucess() {
+    success() {
       this.form.email = ''
       this.form.password = ''
       this.form.password_confirm = ''
+      
+      this.$router.push('/')
     },
     error(data) {
       if (data.request.status == 422) {

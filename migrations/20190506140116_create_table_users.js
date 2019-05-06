@@ -7,6 +7,9 @@ exports.up = function(knex, Promise) {
         table.enu('status', ['novice', 'active', 'blocked'])
         table.integer('role_id')
         table.timestamps()
+
+        table.unique('email')
+
     }).then((unit) => {
         return knex.schema.createTable('user_roles', function (table) {
             table.increments()
@@ -23,6 +26,6 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
     return knex.schema.dropTableIfExists('users')
         .then((unit) => {
-            knex.schema.dropTableIfExists('user_roles')
+            return knex.schema.dropTableIfExists('user_roles')
         })
 };

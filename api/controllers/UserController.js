@@ -1,7 +1,8 @@
 'use strict'
 
-let userModel = require('../models/User')
-let validator = require('validator')
+const userModel = require('../models/User')
+const validator = require('validator')
+const crypto = require('crypto')
 
 class UserController {
   static store(req, res) {
@@ -43,15 +44,42 @@ class UserController {
         'code': 'password_confirm'
       })
     }
+    
+    let userExists = userModel.byEmail(body.email)
+    Promise.all([userExists]).then((u) => {
+      
+      if (u[0] != null) {
+        errors.push({
+          'message': 'Email already taken',
+          'code': 'email'
+        })
+      }
 
-    if (errors.length > 0) {
-      return res.status(422).json(errors)
-    } else {
-
-
-
-      return res.json({'status':'ok'})
-    }
+    }).then(() => {
+      if (errors.length > 0) {
+        return res.status(422).json(errors)
+      } else {
+  
+        const salt = crypto.randomBytes(16).toString('hex')
+        const password = crypto
+        .pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex')
+  
+        userModel.forge({
+          'email': body.email,
+          'password': password,
+          'salt': salt,
+          'role_id': 2,
+          'status': 'novice'
+        }).save().then(() => {
+          return res.json({'status':'ok'})
+        }).catch((err) => {
+          console.dir(err)
+          return res.status(500).json({'message':'Something went wrong'})
+        })
+  
+        
+      }
+    })
   }
 }
 
