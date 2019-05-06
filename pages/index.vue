@@ -1,5 +1,8 @@
 <template>
   <section class="container">
+    <NLink to="/registration">
+    Registration
+    </NLink>
     <div>
       <app-logo/>
       <h1 class="title">
