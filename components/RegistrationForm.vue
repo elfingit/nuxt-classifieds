@@ -81,31 +81,31 @@ export default {
 
       this.$notify({
         group: "alerts",
-        text: "You are successfully registered"
+        text: this.$i18n.t('alerts.succ_registration')
       });
       this.$router.push("/login");
     },
     error(data) {
       if (data.request.status == 422) {
         const errors = JSON.parse(data.request.response);
-
         if (errors) {
           const formErr = new FormErrors(
             errors,
-            this.$el.querySelector("form")
+            this.$el.querySelector("form"),
+            this
           );
           formErr.display();
         }
       } else {
         this.$notify({
           group: "alerts",
-          text: "Something went wrong. Please try again later."
+          text: this.$i18n.t('error.unknown')
         });
       }
     },
     clearError(event) {
       const field = event.target;
-      const formErr = new FormErrors(null, this.$el.querySelector("form"));
+      const formErr = new FormErrors(null, this.$el.querySelector("form"), this);
       formErr.clearError(field);
     }
   }

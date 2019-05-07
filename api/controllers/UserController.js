@@ -4,38 +4,35 @@ const userModel = require('../models/User')
 const validator = require('validator')
 const crypto = require('crypto')
 
-//const i18n = new (require('../plugins/i18n').default)('en-US')
-//console.dir(i18n)
 class UserController {
   static store(req, res) {
 
     let errors = []
 
     let body = req.body
-    console.dir(req.app)
 
     if (validator.isEmpty(body.email)) {
       errors.push({
-        'message': 'This is required field',
+        'message': 'validation.required',
         'code': 'email'
       })
     } else if (!validator.isEmail(body.email)) {
       errors.push({
-        'message': 'Email is not valid',
+        'message': 'validation.bad_email',
         'code': 'email'
       })
     }
 
     if (validator.isEmpty(body.password)) {
       errors.push({
-        'message': 'This is required field',
+        'message': 'validation.required',
         'code': 'password'
       })
     } else if (!validator.isLength(body.password, {
       min: 6, max: 32
     })) {
       errors.push({
-        'message': 'Password must be minimum 6 symbols and not more than 32',
+        'message': 'validation.password_length',
         'code': 'password'
       })
     }
@@ -43,7 +40,7 @@ class UserController {
     if (validator.isEmpty(body.password_confirm)
       || !validator.equals(body.password, body.password_confirm)) {
       errors.push({
-        'message': 'You are should confirm your password',
+        'message': 'validation.confirm_password',
         'code': 'password_confirm'
       })
     }
@@ -53,7 +50,7 @@ class UserController {
 
       if (u[0] != null) {
         errors.push({
-          'message': 'Email already taken',
+          'message': 'validation.email_taken',
           'code': 'email'
         })
       }
@@ -77,10 +74,8 @@ class UserController {
           return res.json({ 'status': 'ok' })
         }).catch((err) => {
           console.dir(err)
-          return res.status(500).json({ 'message': 'Something went wrong' })
+          return res.status(500).json({ 'message': 'error.unknown' })
         })
-
-
       }
     })
   }
