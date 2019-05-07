@@ -5,6 +5,7 @@ const app = require('express')()
 const nuxt_options = require('./nuxt.config')
 
 const userRoute = require('./api/routes/user')
+const authRoute = require('./api/routes/auth')
 
 require('dotenv').config()
 
@@ -19,6 +20,7 @@ app.use(session({
 }))
 
 app.use('/users', userRoute)
+app.use('/auth', authRoute)
 
 // We instantiate Nuxt.js with the options
 const isProd = process.env.NODE_ENV === 'production'

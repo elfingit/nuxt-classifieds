@@ -14,5 +14,6 @@ export default {
   login: 'Login',
   'btn.login': 'Log In',
   'link.or_register': 'Or Register',
-  'alerts.succ_registration': 'You are successfully registered'
+  'alerts.succ_registration': 'You are successfully registered',
+  'auth.bad_creds': 'Bad credential'
 }

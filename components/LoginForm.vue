@@ -9,11 +9,11 @@
           <form action method="post" @submit.prevent="submitForm">
             <div class="form-group">
               <label>{{ $t('email') }}</label>
-              <input type="email" name="email" class="form-control">
+              <input type="email" v-model="form.email" name="email" class="form-control">
             </div>
             <div class="form-group">
               <label>{{ $t('password') }}</label>
-              <input type="password" name="password" class="form-control">
+              <input type="password" v-model="form.password" name="password" class="form-control">
             </div>
             <div class="form-group">
               <button class="btn btn-info" type="submit">{{ $t('btn.login') }}</button>
@@ -27,9 +27,61 @@
 </template>
 
 <script>
+
+import FormErrors from "../lib/form_errors";
+
 export default {
+  data: () => {
+    return {
+      form: {
+        email: '',
+        password: ''
+      }
+    }
+  },
   methods: {
-    async submitForm() {}
+    async submitForm() {
+      console.dir(this.$store)
+      await this.$store
+        .dispatch("auth/login", this.form)
+        .then(this.success)
+        .catch(this.error);
+    },
+    success(data) {
+      this.$store.commit('auth/SET_USER', data.data.user)
+    },
+    error(data) {
+      const request = data.request
+      const status = request.status
+
+      switch (status) {
+        case 422:
+          const errors = JSON.parse(data.request.response);
+          if (errors) {
+            const formErr = new FormErrors(
+              errors,
+              this.$el.querySelector("form"),
+              this
+            )
+            formErr.display()
+          }
+          break;
+        case 401:
+          let payload = JSON.parse(request.response)
+          this.$notify({
+            group: "alerts",
+            text: this.$i18n.t(payload.message)
+          });
+          break;  
+        case 500:
+          this.$notify({
+            group: "alerts",
+            text: this.$i18n.t('error.unknown')
+          });
+          break;
+      }
+
+    }
   }
 };
 </script>
