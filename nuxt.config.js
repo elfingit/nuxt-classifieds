@@ -20,6 +20,19 @@ module.exports = {
 
   modules: [
     '@nuxtjs/axios',
+    ['nuxt-i18n', {
+      locales: [
+        {
+          name: 'English',
+          code: 'en',
+          iso: 'en-US',
+          file: 'en-US.js'
+        }
+      ],
+      lazy: true,
+      langDir: 'locales/',
+      defaultLocale: 'en'
+    }]
   ],
   /*
   ** Build configuration
@@ -28,7 +41,7 @@ module.exports = {
     /*
     ** Run ESLint on save
     */
-    extend (config, { isDev, isClient }) {
+    extend(config, { isDev, isClient }) {
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
