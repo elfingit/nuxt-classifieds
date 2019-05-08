@@ -1,13 +1,14 @@
 <template>
-<RegistrationForm/>
+  <RegistrationForm/>
 </template>
 
 <script>
-    import RegistrationForm from '~/components/RegistrationForm.vue'
+import RegistrationForm from "~/components/RegistrationForm.vue";
 
-    export default {
-    components: {
-        RegistrationForm
-        }
-    }
+export default {
+  components: {
+    RegistrationForm
+  },
+  middleware: ["notAuthenticated"]
+};
 </script>

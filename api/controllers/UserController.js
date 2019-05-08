@@ -73,7 +73,7 @@ class UserController {
         }).save().then(() => {
           return res.json({ 'status': 'ok' })
         }).catch((err) => {
-          console.dir(err)
+          console.error(err)
           return res.status(500).json({ 'message': 'error.unknown' })
         })
       }

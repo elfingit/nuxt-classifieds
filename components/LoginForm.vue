@@ -27,32 +27,30 @@
 </template>
 
 <script>
-
 import FormErrors from "../lib/form_errors";
 
 export default {
   data: () => {
     return {
       form: {
-        email: '',
-        password: ''
+        email: "",
+        password: ""
       }
-    }
+    };
   },
   methods: {
     async submitForm() {
-      console.dir(this.$store)
       await this.$store
         .dispatch("auth/login", this.form)
         .then(this.success)
         .catch(this.error);
     },
     success(data) {
-      this.$store.commit('auth/SET_USER', data.data.user)
+      this.$store.commit("auth/SET_TOKEN", data.data.token);
     },
     error(data) {
-      const request = data.request
-      const status = request.status
+      const request = data.request;
+      const status = request.status;
 
       switch (status) {
         case 422:
@@ -62,25 +60,24 @@ export default {
               errors,
               this.$el.querySelector("form"),
               this
-            )
-            formErr.display()
+            );
+            formErr.display();
           }
           break;
         case 401:
-          let payload = JSON.parse(request.response)
+          let payload = JSON.parse(request.response);
           this.$notify({
             group: "alerts",
             text: this.$i18n.t(payload.message)
           });
-          break;  
+          break;
         case 500:
           this.$notify({
             group: "alerts",
-            text: this.$i18n.t('error.unknown')
+            text: this.$i18n.t("error.unknown")
           });
           break;
       }
-
     }
   }
 };

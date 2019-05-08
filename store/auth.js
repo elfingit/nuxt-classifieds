@@ -5,18 +5,18 @@ Vue.use(Vuex)
 
 //require('whatwg-fetch')
 
-  export const state = () => {
-    return { authUser: null }
-  }
+export const state = () => {
+  return { authToken: null }
+}
 
-  export const mutations = {
-    SET_USER: (state, user) => {
-      state.authUser = user
-    }
+export const mutations = {
+  SET_TOKEN: (state, token) => {
+    state.authToken = token
   }
+}
 
-  export const actions = {
-    login({dispatch, commit}, form) {
-      return this.$axios.post('/auth', form)
-    }
+export const actions = {
+  login({ dispatch, commit }, form) {
+    return this.$axios.post('/auth', form)
   }
+}
