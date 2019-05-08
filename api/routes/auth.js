@@ -7,4 +7,8 @@ router.post('/', (req, res) => {
   return AuthController.login(req, res)
 })
 
+router.get('/role', (req, res) => {
+  return AuthController.role(req, res)
+})
+
 module.exports = router

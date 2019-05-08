@@ -5,8 +5,13 @@ const validator = require('validator')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
+const COOKIE_AGE = 1000 * 60 * 60
+
 class AuthController {
+
   static login(req, res) {
+
+    const { gen_token } = require('../lib/token')
 
     let errors = []
 
@@ -36,10 +41,10 @@ class AuthController {
             'id': u.get('id')
           }
 
-          let token = jwt.sign(user, process.env.APP_SECRET_KEY)
+          let token = gen_token(user)
 
           res.cookie('token', token, {
-            maxAge: 1000 * 60 * 15,
+            maxAge: COOKIE_AGE,
             httpOnly: true,
             signed: true
           })
@@ -57,6 +62,53 @@ class AuthController {
           'message': 'error.unknown'
         })
       })
+
+  }
+
+  static role(req, res) {
+    
+    const { verify_token, gen_token } = require('../lib/token')
+    const payload = verify_token(req.signedCookies.token)
+    
+    if (payload) {
+      userModel.byId(payload.id)
+        .then((u) => {
+          if (u == null) {
+            return res.status(401).json({})
+          }
+          
+          u.role().fetch().then((r) => {
+            if (r == null) {
+              return res.status(401).json({})
+            }
+
+            const user = {
+              'id': u.get('id')
+            }
+  
+            let token = gen_token(user)
+  
+            res.cookie('token', token, {
+              maxAge: COOKIE_AGE,
+              httpOnly: true,
+              signed: true
+            })
+            
+            return res.json({ 
+              'success': true, 
+              'token': token,
+              'role': r.get('name').toLowerCase()
+            })
+
+          })
+
+        }).catch((e) => {
+          console.error(e)
+          return res.status(500).json({
+            'message': 'error.unknown'
+          })
+        })
+    }
 
   }
 }

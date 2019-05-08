@@ -83,7 +83,7 @@ export default {
         group: "alerts",
         text: this.$i18n.t('alerts.succ_registration')
       });
-      this.$router.push("/login");
+      this.$router.push("/login")
     },
     error(data) {
       if (data.request.status == 422) {

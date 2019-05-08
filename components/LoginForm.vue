@@ -47,6 +47,7 @@ export default {
     },
     success(data) {
       this.$store.commit("auth/SET_TOKEN", data.data.token);
+      this.$router.push("/")
     },
     error(data) {
       const request = data.request;
