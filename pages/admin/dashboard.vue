@@ -3,6 +3,7 @@
 </template>
 <script>
   export default {
-    middleware: ["authenticated","check_role"]
+    middleware: ["authenticated", "check_role"],
+    layout: 'admin'
   }
 </script>

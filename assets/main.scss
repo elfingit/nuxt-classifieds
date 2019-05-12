@@ -1,9 +1,19 @@
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 
+html, body {
+  background: #CCCCCC;
+}
+
 small.error {
   color: red;
 }
 
 .pd2 {
   padding-top: 2em;
+}
+
+.admin {
+  section.main {
+    background: #ffffff;
+  }
 }
