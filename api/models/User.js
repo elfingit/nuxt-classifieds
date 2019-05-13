@@ -26,7 +26,7 @@ class User extends bookshelf.Model {
   }
 
   role() {
-    return this.belongsTo(UserRole, 'role_id', 'id')
+    return this.belongsTo(UserRole, 'role_id', 'id').fetch()
   }
 
 }

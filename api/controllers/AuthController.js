@@ -77,7 +77,7 @@ class AuthController {
             return res.status(401).json({})
           }
           
-          u.role().fetch().then((r) => {
+          u.role().then((r) => {
             if (r == null) {
               return res.status(401).json({})
             }
@@ -108,6 +108,8 @@ class AuthController {
             'message': 'error.unknown'
           })
         })
+    } else {
+      return res.status(403).json({})
     }
 
   }
