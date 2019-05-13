@@ -15,6 +15,10 @@ class AuthController {
 
     let errors = []
 
+    if (Object.getOwnPropertyNames(req.body).length == 0) {
+      return res.status(400).end()
+    }
+
     if (validator.isEmpty(req.body.email) || !validator.isEmail(req.body.email)) {
       errors.push({
         code: 'email',
