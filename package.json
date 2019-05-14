@@ -19,6 +19,7 @@
     "bootstrap": "^4.3.1",
     "cookie-parser": "^1.4.4",
     "cookieparser": "^0.1.0",
+    "debug": "^4.1.1",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",

@@ -4,6 +4,9 @@ const acl = (req, res, next) => {
   const { verify_token } = require('../lib/token')
   const userModel = require('../models/User')
 
+  const debug = require('debug')('api:middleware:acl')
+  debug.log = console.log.bind(console)
+
   new Promise((resolve, reject) => {
 
     if (!req.signedCookies || !req.signedCookies.token) {
@@ -32,7 +35,7 @@ const acl = (req, res, next) => {
   }).then(() => {
     return next()
   }).catch((e) => {
-    console.error(e)
+    debug(e.message)
     return res.status(403).end()
   })
 
