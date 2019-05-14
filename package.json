@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "node server.js",
+    "dev-debug": "NODE_ENV=development nodemon --inspect server.js --watch server",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",

@@ -3,7 +3,7 @@
 const userModel = require('../models/User')
 const validator = require('validator')
 const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
+const UserAccess = require('../lib/UserAccess')
 
 const COOKIE_AGE = 1000 * 60 * 60
 
@@ -65,59 +65,21 @@ class AuthController {
 
   }
 
-  static role(req, res) {
+  static async role(req, res) {
 
-    new Promise((resolve, reject) => {
-      const { verify_token, gen_token } = require('../lib/token')
-      const payload = verify_token(req.signedCookies.token)
+    let userAccess = new UserAccess(req)
 
-      if (payload) {
-        userModel.byId(payload.id)
-          .then((u) => {
-            if (u == null) {
-              return reject()
-            }
+    const payload = await userAccess.access()
 
-            u.role().then((r) => {
-              if (r == null) {
-                return reject()
-              }
-
-              const user = {
-                'id': u.get('id')
-              }
-
-              let token = gen_token(user)
-
-              return resolve({
-                'success': true,
-                'token': token,
-                'role': r.get('name').toLowerCase()
-              })
-
-            }).catch((err) => {
-              return reject()
-            })
-
-          }).catch((e) => {
-            return reject()
-          })
-      } else {
-        return reject()
-      }
-    }).then((data) => {
-
-      res.cookie('token', data.token, {
+    if (payload) {
+      return res.cookie('token', payload.token, {
         maxAge: COOKIE_AGE,
         httpOnly: true,
         signed: true
-      })
-
-      return res.json(data)
-    }).catch((err) => {
-      return res.status(403).end()
-    })
-
+      }).json(payload)
+    } else {
+      return res.status(403)
+    }
   }
 }
 
