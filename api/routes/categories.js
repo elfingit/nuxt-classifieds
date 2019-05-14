@@ -3,7 +3,7 @@ const router = express.Router();
 
 const CategoryController = require('../controllers/CategoryController')
 
-const acl = require('../middleware/acl')
+const acl = require('../middleware/acl')('admin')
 
 router.post('/', [acl, (req, res) => {
   return CategoryController.store(req, res)
