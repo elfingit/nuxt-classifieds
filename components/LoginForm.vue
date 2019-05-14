@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import FormErrors from "../lib/form_errors";
+import FormErrors from "../lib/form_errors"
 
 export default {
   data: () => {

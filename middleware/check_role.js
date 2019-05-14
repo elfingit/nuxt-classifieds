@@ -13,6 +13,8 @@ export default function ({ store, redirect }) {
           }
         }
 
+      } else {
+        return redirect('/')
       }
     }).catch((err) => {
       console.error(err)

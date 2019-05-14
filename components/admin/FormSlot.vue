@@ -31,13 +31,13 @@
 
           this.$el.querySelector('.form-slot-container').style.left = position + '%'
 
-          position -= 10
+          position -= 1
 
-        }, 25)
+        }, 5)
 
         setTimeout(() => {
           clearInterval(timerId)
-        }, 180)
+        }, 300)
 
         this.$el.querySelector('.cover').style.display = 'block'
       },

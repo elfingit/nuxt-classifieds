@@ -8,8 +8,8 @@ router.post('/', [ empty_body, (req, res) => {
   return AuthController.login(req, res)
 }])
 
-router.get('/role', (req, res) => {
-  return AuthController.role(req, res)
+router.get('/role', async (req, res) => {
+  return await AuthController.role(req, res)
 })
 
 module.exports = router

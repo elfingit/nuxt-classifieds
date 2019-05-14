@@ -15,10 +15,6 @@ class AuthController {
 
     let errors = []
 
-    if (Object.getOwnPropertyNames(req.body).length == 0) {
-      return res.status(400).end()
-    }
-
     if (validator.isEmpty(req.body.email) || !validator.isEmail(req.body.email)) {
       errors.push({
         code: 'email',
@@ -70,51 +66,57 @@ class AuthController {
   }
 
   static role(req, res) {
-    
-    const { verify_token, gen_token } = require('../lib/token')
-    const payload = verify_token(req.signedCookies.token)
-    
-    if (payload) {
-      userModel.byId(payload.id)
-        .then((u) => {
-          if (u == null) {
-            return res.status(401).json({})
-          }
-          
-          u.role().then((r) => {
-            if (r == null) {
-              return res.status(401).json({})
+
+    new Promise((resolve, reject) => {
+      const { verify_token, gen_token } = require('../lib/token')
+      const payload = verify_token(req.signedCookies.token)
+
+      if (payload) {
+        userModel.byId(payload.id)
+          .then((u) => {
+            if (u == null) {
+              return reject()
             }
 
-            const user = {
-              'id': u.get('id')
-            }
-  
-            let token = gen_token(user)
-  
-            res.cookie('token', token, {
-              maxAge: COOKIE_AGE,
-              httpOnly: true,
-              signed: true
-            })
-            
-            return res.json({ 
-              'success': true, 
-              'token': token,
-              'role': r.get('name').toLowerCase()
+            u.role().then((r) => {
+              if (r == null) {
+                return reject()
+              }
+
+              const user = {
+                'id': u.get('id')
+              }
+
+              let token = gen_token(user)
+
+              return resolve({
+                'success': true,
+                'token': token,
+                'role': r.get('name').toLowerCase()
+              })
+
+            }).catch((err) => {
+              return reject()
             })
 
+          }).catch((e) => {
+            return reject()
           })
+      } else {
+        return reject()
+      }
+    }).then((data) => {
 
-        }).catch((e) => {
-          console.error(e)
-          return res.status(500).json({
-            'message': 'error.unknown'
-          })
-        })
-    } else {
-      return res.status(403).json({})
-    }
+      res.cookie('token', data.token, {
+        maxAge: COOKIE_AGE,
+        httpOnly: true,
+        signed: true
+      })
+
+      return res.json(data)
+    }).catch((err) => {
+      return res.status(403).end()
+    })
 
   }
 }

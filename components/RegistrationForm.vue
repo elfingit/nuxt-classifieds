@@ -87,7 +87,7 @@ export default {
     },
     error(data) {
       if (data.request.status == 422) {
-        const errors = JSON.parse(data.request.response);
+        const errors = data.response.data;
         if (errors) {
           const formErr = new FormErrors(
             errors,

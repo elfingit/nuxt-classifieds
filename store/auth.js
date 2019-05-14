@@ -3,8 +3,6 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-//require('whatwg-fetch')
-
 export const state = () => {
   return { authToken: null }
 }

@@ -3,14 +3,14 @@
     <form-slot>
       <template v-slot:header>Add Category</template>
       <template v-slot:main>
-        <form action="" method="post">
+        <form action="" method="post" @submit.prevent="submitForm">
           <div class="form-group">
             <label>Name</label>
-            <input type="text" name="name" class="form-control">
+            <input type="text" name="name" v-model="form.name" class="form-control">
           </div>
           <div class="form-group">
             <label>Parent category</label>
-            <select name="parent" class="form-control">
+            <select name="parent" class="form-control" v-model="form.parent">
 
             </select>
           </div>
@@ -39,19 +39,65 @@
 <script>
 
   import FormSlot from "~/components/admin/FormSlot"
+  import FormErrors from "../../lib/form_errors"
 
   export default {
-      name: "categories",
+    name: "categories",
     components: {FormSlot},
     layout: 'admin',
 
-    methods: {
-        addCategory() {
-          this.$children[0].show()
-        },
-        hideForm() {
-          this.$children[0].hide()
+    middleware: ["authenticated", "check_role"],
+
+    data: () => {
+      return {
+        form: {
+          name: "",
+          parent: 0
         }
+      }
+    },
+
+    mounted() {
+      this.$store.dispatch("categories/parents")
+    },
+
+    methods: {
+      addCategory() {
+        this.$children[0].show()
+      },
+      hideForm() {
+        this.$children[0].hide()
+      },
+
+
+      async submitForm() {
+        await this.$store.dispatch("categories/store", this.form)
+          .then(this.success)
+          .catch(this.error)
+      },
+
+      success(data) {
+
+      },
+
+      error(err) {
+        if (err.request.status == 422) {
+          const errors = err.response.data;
+          if (errors) {
+            const formErr = new FormErrors(
+              errors,
+              this.$el.querySelector("form"),
+              this
+            );
+            formErr.display();
+          }
+        } else {
+          this.$notify({
+            group: "alerts",
+            text: this.$i18n.t('error.unknown')
+          });
+        }
+      }
     }
   }
 </script>
