@@ -22,11 +22,13 @@ class User extends bookshelf.Model {
   }
 
   static byId (id) {
-    return this.forge().query({where:{ id: id }}).fetch();
+    return this.forge().query({where:{ id: id }}).fetch({
+      withRelated: ['role']
+    });
   }
 
   role() {
-    return this.belongsTo(UserRole, 'role_id', 'id').fetch()
+    return this.belongsTo(UserRole, 'role_id', 'id')
   }
 
 }

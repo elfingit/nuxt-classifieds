@@ -1,14 +1,17 @@
 export default function ({ store, redirect }) {
-  
+
+  const debug = require('debug')('client:check_role')
+  debug.log = console.log.bind(console)
+
   if (store.state.auth.authToken) {
     store.$axios.get('/auth/role').then((data) => {
 
-      if (data && Array.isArray(data)) {
+      if (data.data) {
 
-        const response = data[0]
+        const response = data.data
 
-        if (response.data.success) {
-          if (!response.data.role || response.data.role !== 'admin') {
+        if (response.success) {
+          if (!response.role || response.role !== 'admin') {
             return redirect('/')
           }
         }
@@ -17,7 +20,7 @@ export default function ({ store, redirect }) {
         return redirect('/')
       }
     }).catch((err) => {
-      console.error(err)
+      debug(err)
       return redirect('/')
     })
 

@@ -10,37 +10,57 @@ class BadAuthToken extends Error {}
 class UserNotFound extends Error {}
 class UnknownUserRole extends Error {}
 
-class UserAccess {
+const UserAccess = (req) => {
+  return async () => {
 
-  constructor(req) {
-    this.req = req
-  }
+    if (!req.signedCookies || !req.signedCookies.token) {
+      throw new NoAuthCookie()
+    }
 
-  acess() {
+    const currentToken = verify_token(req.signedCookies.token)
 
-    let payload = null
-    let self = this
+    if (!currentToken) {
+      throw new BadAuthToken()
+    }
 
-    new Promise((resolve, reject) => {
+    const user = await userModel.byId(currentToken.id)
 
-      if (!self.req.signedCookies && !self.req.signedCookies.token) {
-        return reject(new NoAuthCookie())
-      }
+    if (!user) {
+      throw new UserNotFound()
+    }
 
-      const payload = verify_token(req.signedCookies.token)
+    let relation = user.relations
 
-      if (!payload) {
-        return  reject(new BadAuthToken())
-      }
+    if (!relation || !relation.role) {
+      throw new UnknownUserRole()
+    }
 
-      userModel.byId(payload.id)
+    let role = relation.role
+
+    const tokenPayload = {
+      'id': user.get('id')
+    }
+
+    let token = gen_token(tokenPayload)
+
+    return  {
+      'success': true,
+      'token': token,
+      'role': role.get('name').toLowerCase()
+    }
+
+
+    /*const promise = new Promise((resolve, reject) => {
+
+
+      userModel.byId(currentToken.id)
         .then((u) => {
 
           if (u == null) {
             return reject(new UserNotFound())
           }
 
-          u.role().then((r) => {
+          u.role().fetch().then((r) => {
 
             if (r == null) {
               return reject(new UnknownUserRole())
@@ -63,18 +83,18 @@ class UserAccess {
           })
 
         }).catch((err) => {
-          return reject(err)
+        return reject(err)
       })
 
-    }).then((data) => {
-      payload = data
-    }).catch((err) => {
-      debug(err)
     })
 
-    return payload
+    Promise.all([promise]).then((data) => {
+      return payload
+    }).catch((err) => {
+      debug(err)
+      return null
+    })*/
   }
-
 }
 
-module.exports = UserAccess
+module.exports = { UserAccess, NoAuthCookie, BadAuthToken, UserNotFound, UnknownUserRole }

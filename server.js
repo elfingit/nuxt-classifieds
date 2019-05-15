@@ -14,8 +14,6 @@ require('dotenv').config()
 app.use(cookieParser(process.env.APP_SECRET_KEY))
 app.use(bodyParser.json())
 
-
-
 app.use('/users', userRoute)
 app.use('/auth', authRoute)
 app.use('/categories', categoryRoute)

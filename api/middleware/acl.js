@@ -1,44 +1,23 @@
 
 const acl = (role) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
 
-    const { verify_token } = require('../lib/token')
-    const userModel = require('../models/User')
+    try {
 
-    const debug = require('debug')('api:middleware:acl')
-    debug.log = console.log.bind(console)
+      const { UserAccess } = require('../lib/UserAccess')
 
-    new Promise((resolve, reject) => {
-
-      if (!req.signedCookies || !req.signedCookies.token) {
-        return reject(new Error('Not token in cookies'))
-      }
-
-      const payload = verify_token(req.signedCookies.token)
-
-      if (!payload) {
-        return reject(new Error('Payload is empty'))
-      }
-
-      userModel.byId(payload.id).then((u) => {
-        u.role().then((r) => {
-          if (r.get('name').toLowerCase() === role) {
-            return resolve()
-          } else {
-            return reject(new Error('Bad user role'))
-          }
-        }).catch((e) => {
-          return reject(e)
+      UserAccess(req)()
+        .then((payload) => {
+          return next()
         })
-      }).catch((e) => {
-        return reject(e)
-      })
-    }).then(() => {
-      return next()
-    }).catch((e) => {
-      debug(e.message)
-      return res.status(403).end()
-    })
+        .catch((err) => {
+          return res.status(403)
+        })
+
+    } catch (e) {
+      console.error(e)
+      return res.status(500)
+    }
 
   }
 }

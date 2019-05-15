@@ -3,7 +3,6 @@
 const userModel = require('../models/User')
 const validator = require('validator')
 const crypto = require('crypto')
-const UserAccess = require('../lib/UserAccess')
 
 const COOKIE_AGE = 1000 * 60 * 60
 
@@ -65,21 +64,29 @@ class AuthController {
 
   }
 
-  static async role(req, res) {
+  static role(req, res) {
 
-    let userAccess = new UserAccess(req)
+    try {
 
-    const payload = await userAccess.access()
+      const { UserAccess } = require('../lib/UserAccess')
 
-    if (payload) {
-      return res.cookie('token', payload.token, {
-        maxAge: COOKIE_AGE,
-        httpOnly: true,
-        signed: true
-      }).json(payload)
-    } else {
-      return res.status(403)
+      UserAccess(req)()
+        .then((payload) => {
+          return res.cookie('token', payload.token, {
+            maxAge: COOKIE_AGE,
+            httpOnly: true,
+            signed: true
+          }).json(payload)
+        })
+        .catch((err) => {
+          return res.status(403)
+        })
+
+    } catch (e) {
+      console.error(e)
+      return res.status(500)
     }
+
   }
 }
 
