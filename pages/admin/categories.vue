@@ -11,7 +11,7 @@
           <div class="form-group">
             <label>Parent category</label>
             <select name="parent" class="form-control" v-model="form.parent">
-              <option v-for="parent in parentsList" v-bind:key="parent.id">{{ parent.name }}</option>
+              <option v-for="parent in parentsList" v-bind:key="parent.id" v-bind:value="parent.id">{{ parent.name }}</option>
             </select>
           </div>
           <div class="form-group">

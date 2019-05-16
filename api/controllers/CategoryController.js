@@ -32,12 +32,13 @@ class CategoryController {
 
     categoryModel.forge({
       name: body.name,
-      slug: slug
+      slug: slug,
+      parent_id: body.parent
     }).save()
       .then((c) => {
         return res.json(c)
       }).catch((err) => {
-        debug(err.message)
+        debug(err)
         return res.status(500).json({ 'message': 'error.unknown' })
       })
 

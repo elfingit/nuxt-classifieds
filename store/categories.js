@@ -14,11 +14,13 @@ export const getters = {
   },
 
   PARENTS: state => {
-    let parents = _.map(state.categories, (item) => {
-      if (!item.parent) {
+    var parents = _.filter(state.categories, (item) => {
+      if (!item.parent_id) {
         return item
       }
     })
+
+    parents = _.orderBy(parents, ['name'], ['asc'])
 
     return parents
   }
