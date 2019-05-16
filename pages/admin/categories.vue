@@ -11,7 +11,7 @@
           <div class="form-group">
             <label>Parent category</label>
             <select name="parent" class="form-control" v-model="form.parent">
-
+              <option v-for="parent in parentsList" v-bind:key="parent.id">{{ parent.name }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -21,14 +21,26 @@
         </form>
       </template>
     </form-slot>
-    <button class="btn btn-primary" v-on:click="addCategory()">Add category</button>
+    <div class="grid-toolbar">
+      <button class="btn btn-primary" v-on:click="addCategory()">Add category</button>
+    </div>
     <table class="table table-bordered">
       <thead>
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">Slug</th>
         <th scope="col">Created At</th>
         <th scope="col">Updated At</th>
+        <th scope="col">Actions</th>
+      </tr>
+      <tr v-for="item in catsList" v-bind:key="item.id">
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.slug }}</td>
+        <td>{{ item.created_at }}</td>
+        <td>{{ item.updated_at }}</td>
+        <td></td>
       </tr>
       </thead>
       <tbody></tbody>
@@ -48,6 +60,19 @@
 
     middleware: ["authenticated", "check_role"],
 
+    mounted() {
+      this.$store.dispatch('categories/list')
+    },
+
+    computed: {
+      catsList() {
+        return this.$store.getters['categories/CATS']
+      },
+      parentsList() {
+        return this.$store.getters['categories/PARENTS']
+      }
+    },
+
     data: () => {
       return {
         form: {
@@ -55,10 +80,6 @@
           parent: 0
         }
       }
-    },
-
-    mounted() {
-      this.$store.dispatch("categories/parents")
     },
 
     methods: {
@@ -71,13 +92,20 @@
 
 
       async submitForm() {
+        this.$el
+          .querySelector("form")
+          .querySelectorAll("small")
+          .forEach(el => {
+            el.remove();
+          });
         await this.$store.dispatch("categories/store", this.form)
           .then(this.success)
           .catch(this.error)
       },
 
       success(data) {
-
+        this.$children[0].hide()
+        this.form.name = ''
       },
 
       error(err) {

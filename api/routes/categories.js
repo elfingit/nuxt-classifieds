@@ -10,6 +10,10 @@ router.post('/', [acl, empty_body, (req, res) => {
   return CategoryController.store(req, res)
 }])
 
+router.get('/', [acl, (req, res) => {
+  return CategoryController.list(req, res)
+}])
+
 module.exports = router
 
 
