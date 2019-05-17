@@ -1,6 +1,6 @@
 
 const acl = (role) => {
-  return async (req, res, next) => {
+  return (req, res, next) => {
 
     try {
 
@@ -11,12 +11,12 @@ const acl = (role) => {
           return next()
         })
         .catch((err) => {
-          return res.status(403)
+          return res.status(403).end()
         })
 
     } catch (e) {
       console.error(e)
-      return res.status(500)
+      return res.status(500).end()
     }
 
   }

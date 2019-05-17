@@ -7,24 +7,12 @@ debug.log = console.log.bind(console)
 const categoryModel = require('../models/Category')
 
 const slugify = require('slugify')
+const { ValidationError } = require('../lib/errors')
 
 class CategoryController {
   static store(req, res) {
 
-    let errors = []
-
     let body = req.body
-
-    if (validator.isEmpty(body.name)) {
-      errors.push({
-        'message': 'validation.required',
-        'code': 'name'
-      })
-    }
-
-    if (errors.length > 0) {
-      return res.status(422).json(errors)
-    }
 
     const slug = slugify(body.name, {
       lower: true
@@ -38,8 +26,18 @@ class CategoryController {
       .then((c) => {
         return res.json(c)
       }).catch((err) => {
+
         debug(err)
-        return res.status(500).json({ 'message': 'error.unknown' })
+
+        if (err instanceof ValidationError) {
+          return res.status(422).json([{
+            'code': err.code,
+            'message': err.message
+          }])
+        } else {
+          return res.status(500).json({ 'message': 'error.unknown' })
+        }
+
       })
 
   }

@@ -18,13 +18,13 @@ class User extends bookshelf.Model {
   }
 
   static byEmail (email) {
-    return this.forge().query({where:{ email: email }}).fetch();
+    return this.forge().query({where:{ email: email }}).fetch()
   }
 
   static byId (id) {
     return this.forge().query({where:{ id: id }}).fetch({
       withRelated: ['role']
-    });
+    })
   }
 
   role() {
