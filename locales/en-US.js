@@ -15,5 +15,6 @@ export default {
   'btn.login': 'Log In',
   'link.or_register': 'Or Register',
   'alerts.succ_registration': 'You are successfully registered',
-  'auth.bad_creds': 'Bad credential'
+  'auth.bad_creds': 'Bad credential',
+  'validation.category_not_exists': 'Parent category not exists'
 }

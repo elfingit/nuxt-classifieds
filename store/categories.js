@@ -11,18 +11,6 @@ export const state = () => {
 export const getters = {
   CATS: state => {
     return state.categories
-  },
-
-  PARENTS: state => {
-    var parents = _.filter(state.categories, (item) => {
-      if (!item.parent_id) {
-        return item
-      }
-    })
-
-    parents = _.orderBy(parents, ['name'], ['asc'])
-
-    return parents
   }
 }
 
@@ -60,10 +48,6 @@ export const actions = {
         return reject(error)
       })
     })
-  },
-
-  parents({ dispatch, commit }) {
-
   }
 
 }

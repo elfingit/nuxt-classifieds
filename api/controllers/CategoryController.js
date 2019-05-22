@@ -45,8 +45,12 @@ class CategoryController {
   static list(req, res) {
     const CategoryCollection = require('../collections/CategoryCollection')
 
-    new CategoryCollection().fetch()
-      .then((categories) => {
+    new CategoryCollection().query({
+      where: { parent_id: 0  },
+      orWhere: { parent_id: null }
+    }).fetch({
+      withRelated: ['children']
+    }).then((categories) => {
         return res.json(categories)
       }).catch((err) => {
         debug(err)

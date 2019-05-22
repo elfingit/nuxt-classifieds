@@ -11,7 +11,7 @@
           <div class="form-group">
             <label>Parent category</label>
             <select name="parent" class="form-control" v-model="form.parent">
-              <option v-for="parent in parentsList" v-bind:key="parent.id" v-bind:value="parent.id">{{ parent.name }}</option>
+              <option v-for="parent in catsList" v-bind:key="parent.id" v-bind:value="parent.id">{{ parent.name }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -24,27 +24,34 @@
     <div class="grid-toolbar">
       <button class="btn btn-primary" v-on:click="addCategory()">Add category</button>
     </div>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Slug</th>
-        <th scope="col">Created At</th>
-        <th scope="col">Updated At</th>
-        <th scope="col">Actions</th>
-      </tr>
-      <tr v-for="item in catsList" v-bind:key="item.id">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.slug }}</td>
-        <td>{{ item.created_at }}</td>
-        <td>{{ item.updated_at }}</td>
-        <td></td>
-      </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="list-group">
+          <li class="list-group-item" v-for="item in catsList" v-bind:key="item.id">
+            <div class="col-1">{{ item.id }}</div>
+            <div class="col-2">{{ item.name }}</div>
+            <div class="col-2">{{ item.slug }}</div>
+            <div class="col-2">{{ item.created_at }}</div>
+            <div class="col-2">{{ item.updated_at }}</div>
+            <div class="col-2">
+              <button class="btn btn-info" v-on:click="edit(item)">Edit</button>
+            </div>
+            <ul class="list-group inner" v-if="item.children.length > 0">
+              <li class="list-group-item" v-for="child in item.children" v-bind:key="child.id">
+                <div class="col-1">{{ child.id }}</div>
+                <div class="col-2">{{ child.name }}</div>
+                <div class="col-2">{{ child.slug }}</div>
+                <div class="col-2">{{ child.created_at }}</div>
+                <div class="col-2">{{ child.updated_at }}</div>
+                <div class="col-2">
+                  <button class="btn btn-info" v-on:click="edit(child)">Edit</button>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,9 +74,6 @@
     computed: {
       catsList() {
         return this.$store.getters['categories/CATS']
-      },
-      parentsList() {
-        return this.$store.getters['categories/PARENTS']
       }
     },
 
@@ -77,7 +81,8 @@
       return {
         form: {
           name: "",
-          parent: 0
+          parent: null,
+          update_id: null
         }
       }
     },
@@ -106,6 +111,7 @@
       success(data) {
         this.$children[0].hide()
         this.form.name = ''
+        this.form.parent = null
       },
 
       error(err) {
@@ -125,11 +131,23 @@
             text: this.$i18n.t('error.unknown')
           });
         }
+      },
+
+      edit(item) {
+        this.form.name = item.name
+        this.form.parent = item.parent_id
+        this.form.update_id = item.id
+
+        this.$children[0].show()
       }
+
     }
   }
 </script>
 
 <style scoped>
+  .list-group-item .col-2, .list-group-item .col-1 {
+    display: inline-table;
+  }
 
 </style>

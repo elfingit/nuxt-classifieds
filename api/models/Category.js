@@ -66,6 +66,14 @@ class Category extends bookshelf.Model {
     return this.forge().query({where:{ id: id }}).fetch()
   }
 
+  children() {
+    return this.hasMany(Category, 'parent_id', 'id')
+  }
+
+  parent() {
+    return this.hasOne(Category, 'id', 'parent_id')
+  }
+
 }
 
 module.exports = Category
