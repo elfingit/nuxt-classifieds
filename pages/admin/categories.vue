@@ -115,6 +115,7 @@
       },
 
       error(err) {
+        console.dir(err)
         if (err.request.status == 422) {
           const errors = err.response.data;
           if (errors) {

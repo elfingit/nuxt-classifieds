@@ -18,12 +18,26 @@ class CategoryController {
       lower: true
     })
 
-    categoryModel.forge({
-      name: body.name,
-      slug: slug,
-      parent_id: body.parent
-    }).save()
-      .then((c) => {
+    let promise = null
+
+    if (body.update_id) {
+
+      promise = categoryModel.forge({ id: body.update_id })
+        .save({
+          name: body.name,
+          slug: slug,
+          parent_id: body.parent
+        }, { patch: true, withRefresh: true })
+
+    } else {
+      promise = categoryModel.forge({
+        name: body.name,
+        slug: slug,
+        parent_id: body.parent
+      }).save(null, {withRefresh: true})
+    }
+
+    promise.then((c) => {
         return res.json(c)
       }).catch((err) => {
 

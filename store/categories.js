@@ -17,7 +17,27 @@ export const getters = {
 export const mutations = {
 
   add(state, payload) {
-    state.categories.push(payload)
+
+    payload.children = payload.children || []
+
+    let index = _.findIndex(state.categories, { id: payload.id })
+
+    if (index) {
+      payload.children = state.categories[index].children || []
+      state.categories.splice(index, 1, payload)
+    }
+
+    console.dir(payload)
+
+    /*if (payload.parent_id) {
+      state.categories = _.forEach(state.categories, (value) => {
+        if (value.id == payload.parent_id) {
+          value.children.push(payload)
+        }
+      })
+    } else {
+      state.categories.push(payload)
+    }*/
   },
 
   addList(state, payload) {
