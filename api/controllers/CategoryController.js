@@ -68,8 +68,29 @@ class CategoryController {
         return res.json(categories)
       }).catch((err) => {
         debug(err)
-        return res.status(500)
+        return res.status(500).end()
     })
+  }
+
+  static del(req, res) {
+    const id = req.params.id
+
+    categoryModel.byId(id)
+      .then((c) => {
+
+        if (c == null) {
+          return res.status(404).end()
+        }
+
+        c.destroy()
+
+        return res.status(204).end()
+
+      }).catch((err) => {
+        debug(err)
+        return res.status(500).end()
+    })
+
   }
 }
 

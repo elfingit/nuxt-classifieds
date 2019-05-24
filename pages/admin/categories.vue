@@ -70,7 +70,9 @@
           name: "",
           parent: null,
           update_id: null
-        }
+        },
+        selectedCat: null,
+        deleteCatListener: null
       }
     },
 
@@ -130,17 +132,37 @@
       },
 
       del(item) {
+
+        this.selectedCat = item
         this.$refs.popupAlert.show()
 
-        this.$el.querySelector('#confirm-delete').addEventListener('click', (e) => {
-          console.dir(e)
-        }, {
-          once: true
-        })
+        const self = this
+
+        this.deleteCatListener = (e) => {
+          self.$store.dispatch('categories/del_cat', self.selectedCat)
+            .then(self.successDelCat)
+            .catch(self.errorDelCat)
+        }
+
+        this.$el.querySelector('#confirm-delete').addEventListener('click', this.deleteCatListener)
       },
 
       hideDangerPopup() {
         this.$refs.popupAlert.hide()
+        this.selectedCat = null
+
+        if (this.deleteCatListener) {
+          this.$el.querySelector('#confirm-delete').removeEventListener('click', this.deleteCatListener)
+          this.deleteCatListener = null
+        }
+      },
+
+      successDelCat() {
+        this.hideDangerPopup()
+      },
+
+      errorDelCat() {
+
       }
 
     }

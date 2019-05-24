@@ -59,6 +59,30 @@ export const mutations = {
 
   addList(state, payload) {
     state.categories = payload
+  },
+
+  del(state, payload) {
+
+    let index = _.findIndex(state.categories, { id: payload.id })
+
+    if (index > -1) {
+      state.categories.splice(index, 1)
+    } else {
+      state.categories = _.forEach(state.categories, (value) => {
+
+        new Promise((resolve, reject) => {
+          let childIndex = _.findIndex(value.children, { id: payload.id })
+
+          if (childIndex > -1) {
+            value.children.splice(childIndex, 1)
+          }
+
+          return resolve()
+
+        })
+
+      })
+    }
   }
 
 }
@@ -83,6 +107,18 @@ export const actions = {
           commit('addList', response.data)
         }).catch((error) => {
         return reject(error)
+      })
+    })
+  },
+
+  del_cat({ dispatch, commit }, category) {
+    return new Promise((resolve, reject) => {
+      this.$axios.delete('/categories/' + category.id)
+        .then((response) => {
+          commit('del', category)
+          return resolve(response)
+        }).catch((err) => {
+          return reject(err)
       })
     })
   }
