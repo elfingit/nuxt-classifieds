@@ -162,7 +162,7 @@
       },
 
       errorDelCat() {
-
+        this.hideDangerPopup()
       }
 
     }
