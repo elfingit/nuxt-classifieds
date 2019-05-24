@@ -1,6 +1,14 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div class="col-lg-12">
-    <form-slot>
+    <PopupAlert ref="popupAlert">
+      <template v-slot:title>Do you really want to delete this category?</template>
+      <template v-slot:body>WARNING! If you are delete this category then all subcategories and all classifieds in this category also will are deleted.</template>
+      <template v-slot:buttons>
+        <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
+        <button type="button" class="btn btn-secondary" v-on:click="hideDangerPopup()">Cancel</button>
+      </template>
+    </PopupAlert>
+    <form-slot ref="formSlot">
       <template v-slot:header>Add Category</template>
       <template v-slot:main>
         <form action="" method="post" @submit.prevent="submitForm">
@@ -26,7 +34,7 @@
     </div>
     <div class="row">
       <div class="col-lg-12">
-        <CategoriesList class="list-group" v-on:editCategory="value => { edit(value) }" v-bind:cats="catsList" v-bind:edit-fn="edit"></CategoriesList>
+        <CategoriesList class="list-group" v-on:editCategory="value => { edit(value) }" v-on:deleteCategory="value => { del(value) }" v-bind:cats="catsList" v-bind:edit-fn="edit"></CategoriesList>
       </div>
     </div>
   </div>
@@ -37,10 +45,11 @@
   import FormSlot from "~/components/admin/FormSlot"
   import FormErrors from "../../lib/form_errors"
   import CategoriesList from "~/components/admin/CategoriesList"
+  import PopupAlert from "~/components/PopupAlert"
 
   export default {
     name: "categories",
-    components: {FormSlot, CategoriesList},
+    components: {FormSlot, CategoriesList, PopupAlert},
     layout: 'admin',
 
     middleware: ["authenticated", "check_role"],
@@ -67,10 +76,10 @@
 
     methods: {
       addCategory() {
-        this.$children[0].show()
+        this.$refs.formSlot.show()
       },
       hideForm() {
-        this.$children[0].hide()
+        this.$refs.formSlot.hide()
       },
 
 
@@ -87,13 +96,13 @@
       },
 
       success(data) {
-        this.$children[0].hide()
+        this.hideForm()
         this.form.name = ''
         this.form.parent = null
       },
 
       error(err) {
-        console.dir(err)
+
         if (err.request.status == 422) {
           const errors = err.response.data;
           if (errors) {
@@ -117,7 +126,21 @@
         this.form.parent = item.parent_id
         this.form.update_id = item.id
 
-        this.$children[0].show()
+        this.$refs.formSlot.show()
+      },
+
+      del(item) {
+        this.$refs.popupAlert.show()
+
+        this.$el.querySelector('#confirm-delete').addEventListener('click', (e) => {
+          console.dir(e)
+        }, {
+          once: true
+        })
+      },
+
+      hideDangerPopup() {
+        this.$refs.popupAlert.hide()
       }
 
     }

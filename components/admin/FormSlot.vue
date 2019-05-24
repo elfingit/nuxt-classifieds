@@ -36,14 +36,11 @@
         setTimeout(() => {
           clearInterval(timerId)
         }, 300)
-
-        this.$el.style.display = 'block'
       },
 
       hide() {
         this.$el.style.display = 'none'
         this.$el.querySelector('.form-slot-container').style.left = '-150%'
-        this.$el.style.display = 'none'
       }
     }
 

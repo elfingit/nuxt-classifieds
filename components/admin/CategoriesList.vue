@@ -7,9 +7,12 @@
         <div class="col-2">{{ item.created_at }}</div>
         <div class="col-2">{{ item.updated_at }}</div>
         <div class="col-2">
-          <button class="btn btn-info" v-on:click="edit(item)">Edit</button>
+          <div class="btn-group">
+            <button type="button" class="btn btn-info" v-on:click="edit(item)">Edit</button>
+            <button type="button" class="btn btn-danger" v-on:click="del(item)">Delete</button>
+          </div>
         </div>
-        <CategoriesList class="list-group inner" v-on:editCategory="value => { edit(value) }" v-bind:cats="item.children"></CategoriesList>
+        <CategoriesList class="list-group inner" v-on:editCategory="value => { edit(value) }" v-on:deleteCategory="value => del(value)" v-bind:cats="item.children"></CategoriesList>
       </li>
     </ul>
 </template>
@@ -23,6 +26,10 @@
     methods: {
       edit(item) {
         this.$emit('editCategory', item)
+      },
+
+      del(item) {
+        this.$emit('deleteCategory', item)
       }
     }
 
@@ -32,5 +39,8 @@
 <style scoped>
   .list-group-item .col-2, .list-group-item .col-1 {
     display: inline-table;
+  }
+  .btn-group > .btn, .btn-group-vertical > .btn {
+    margin: 0.1rem;
   }
 </style>
