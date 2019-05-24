@@ -26,30 +26,7 @@
     </div>
     <div class="row">
       <div class="col-lg-12">
-        <ul class="list-group">
-          <li class="list-group-item" v-for="item in catsList" v-bind:key="item.id">
-            <div class="col-1">{{ item.id }}</div>
-            <div class="col-2">{{ item.name }}</div>
-            <div class="col-2">{{ item.slug }}</div>
-            <div class="col-2">{{ item.created_at }}</div>
-            <div class="col-2">{{ item.updated_at }}</div>
-            <div class="col-2">
-              <button class="btn btn-info" v-on:click="edit(item)">Edit</button>
-            </div>
-            <ul class="list-group inner" v-if="item.children.length > 0">
-              <li class="list-group-item" v-for="child in item.children" v-bind:key="child.id">
-                <div class="col-1">{{ child.id }}</div>
-                <div class="col-2">{{ child.name }}</div>
-                <div class="col-2">{{ child.slug }}</div>
-                <div class="col-2">{{ child.created_at }}</div>
-                <div class="col-2">{{ child.updated_at }}</div>
-                <div class="col-2">
-                  <button class="btn btn-info" v-on:click="edit(child)">Edit</button>
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <CategoriesList class="list-group" v-on:editCategory="value => { edit(value) }" v-bind:cats="catsList" v-bind:edit-fn="edit"></CategoriesList>
       </div>
     </div>
   </div>
@@ -59,10 +36,11 @@
 
   import FormSlot from "~/components/admin/FormSlot"
   import FormErrors from "../../lib/form_errors"
+  import CategoriesList from "~/components/admin/CategoriesList"
 
   export default {
     name: "categories",
-    components: {FormSlot},
+    components: {FormSlot, CategoriesList},
     layout: 'admin',
 
     middleware: ["authenticated", "check_role"],
@@ -147,8 +125,5 @@
 </script>
 
 <style scoped>
-  .list-group-item .col-2, .list-group-item .col-1 {
-    display: inline-table;
-  }
 
 </style>
