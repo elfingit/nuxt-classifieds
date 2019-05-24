@@ -22,22 +22,39 @@ export const mutations = {
 
     let index = _.findIndex(state.categories, { id: payload.id })
 
-    if (index) {
+    if (index > -1) {
       payload.children = state.categories[index].children || []
       state.categories.splice(index, 1, payload)
     }
 
-    console.dir(payload)
+    if (payload.parent_id) {
 
-    /*if (payload.parent_id) {
-      state.categories = _.forEach(state.categories, (value) => {
-        if (value.id == payload.parent_id) {
-          value.children.push(payload)
-        }
+      new Promise((resolve, reject) => {
+        state.categories = _.forEach(state.categories, (value) => {
+          if (value.id == payload.parent_id) {
+            value.children.push(payload)
+          }
+        })
+
+        return resolve()
       })
+
+      new Promise((resolve, reject) => {
+        state.categories = _.forEach(state.categories, (value) => {
+
+          let childIndex = _.findIndex(value.children, { id: payload.id })
+
+          if (childIndex > -1) {
+            if (value.children[childIndex].parent_id != payload.parent_id) {
+              value.children.splice(childIndex, 1)
+            }
+          }
+        })
+      })
+
     } else {
       state.categories.push(payload)
-    }*/
+    }
   },
 
   addList(state, payload) {
