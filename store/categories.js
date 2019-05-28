@@ -35,8 +35,6 @@ export const mutations = {
             value.children.push(payload)
           }
         })
-
-        return resolve()
       })
 
       new Promise((resolve, reject) => {

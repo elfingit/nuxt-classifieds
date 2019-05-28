@@ -151,18 +151,24 @@
         this.$refs.popupAlert.hide()
         this.selectedCat = null
 
-        if (this.deleteCatListener) {
-          this.$el.querySelector('#confirm-delete').removeEventListener('click', this.deleteCatListener)
-          this.deleteCatListener = null
-        }
+        this.removeDeleteListener()
       },
 
       successDelCat() {
         this.hideDangerPopup()
+        this.removeDeleteListener()
       },
 
       errorDelCat() {
         this.hideDangerPopup()
+        this.removeDeleteListener()
+      },
+
+      removeDeleteListener() {
+        if (this.deleteCatListener) {
+          this.$el.querySelector('#confirm-delete').removeEventListener('click', this.deleteCatListener)
+          this.deleteCatListener = null
+        }
       }
 
     }
