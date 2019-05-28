@@ -18,8 +18,6 @@ router.delete('/:id', [acl, (req, res) => {
   return CategoryController.del(req, res)
 }])
 
-console.dir(router.stack)
-
 module.exports = router
 
 

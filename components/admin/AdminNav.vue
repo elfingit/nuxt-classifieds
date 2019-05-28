@@ -9,6 +9,7 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#">Home</a>
           <nuxt-link to="categories" class="nav-item nav-link">Categories</nuxt-link>
+          <nuxt-link to="users" class="nav-item nav-link">Users</nuxt-link>
         </div>
       </div>
     </nav>
@@ -16,9 +17,9 @@
 </template>
 
 <script>
-    export default {
-        name: "AdminNav"
-    }
+  export default {
+    name: "AdminNav"
+  }
 </script>
 
 <style scoped>

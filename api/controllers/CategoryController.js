@@ -1,6 +1,5 @@
 'use strict'
 
-const validator = require('validator')
 const debug = require('debug')('api:controller:category')
 debug.log = console.log.bind(console)
 

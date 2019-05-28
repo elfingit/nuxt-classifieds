@@ -4,13 +4,18 @@ const userModel = require('../models/User')
 const validator = require('validator')
 const crypto = require('crypto')
 
+const debug = require('debug')('api:controller:user')
+debug.log = console.log.bind(console)
+
+const _ = require('lodash')
+
 class UserController {
   static store(req, res) {
 
     let errors = []
 
     let body = req.body
-
+    //TODO move validation to model
     if (validator.isEmpty(body.email)) {
       errors.push({
         'message': 'validation.required',
@@ -77,6 +82,22 @@ class UserController {
           return res.status(500).json({ 'message': 'error.unknown' })
         })
       }
+    })
+  }
+
+  static list(req, res) {
+    const UserCollection = require('../collections/UserCollection')
+
+    new UserCollection().fetch({
+      withRelated: [{'role':q => {
+        q.columns('name', 'id')
+    }}],
+      columns: ['id', 'email', 'created_at', 'updated_at', 'role_id']
+    }).then((users) => {
+      return res.json(users)
+    }).catch((err) => {
+      debug(err)
+      return res.status(500).end()
     })
   }
 }
