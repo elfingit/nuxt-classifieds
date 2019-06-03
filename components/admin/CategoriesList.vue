@@ -8,8 +8,8 @@
         <div class="col-2">{{ item.updated_at }}</div>
         <div class="col-2">
           <div class="btn-group">
-            <button type="button" class="btn btn-info" v-on:click="edit(item)">Edit</button>
-            <button type="button" class="btn btn-danger" v-on:click="del(item)">Delete</button>
+            <button type="button" class="btn btn-info" v-on:click="edit(item)">{{ $t('btn.edit') }}</button>
+            <button type="button" class="btn btn-danger" v-on:click="del(item)">{{ $t('btn.delete') }}</button>
           </div>
         </div>
         <CategoriesList class="list-group inner" v-on:editCategory="value => { edit(value) }" v-on:deleteCategory="value => del(value)" v-bind:cats="item.children"></CategoriesList>

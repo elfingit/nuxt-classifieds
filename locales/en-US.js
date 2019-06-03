@@ -16,5 +16,15 @@ export default {
   'link.or_register': 'Or Register',
   'alerts.succ_registration': 'You are successfully registered',
   'auth.bad_creds': 'Bad credential',
-  'validation.category_not_exists': 'Parent category not exists'
+  'validation.category_not_exists': 'Parent category not exists',
+  'title.del_category': 'Do you really want to delete this category?',
+  'description.del_category': 'WARNING! If you are delete this category then all subcategories and all classifieds in this category also will are deleted.',
+  'btn.delete': 'Delete',
+  'btn.cancel': 'Cancel',
+  'title.add_category': 'Add Category',
+  'lbl.name': 'Name',
+  'lbl.parent_cat': 'Parent category',
+  'btn.save': 'Save',
+  'btn.add_cat': 'Add category',
+  'btn.edit': 'Edit'
 }

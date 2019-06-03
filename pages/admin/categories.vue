@@ -1,36 +1,36 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div class="col-lg-12">
     <PopupAlert ref="popupAlert">
-      <template v-slot:title>Do you really want to delete this category?</template>
-      <template v-slot:body>WARNING! If you are delete this category then all subcategories and all classifieds in this category also will are deleted.</template>
+      <template v-slot:title>{{ $t('title.del_category') }}</template>
+      <template v-slot:body>{{ $t('description.del_category') }}</template>
       <template v-slot:buttons>
-        <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
-        <button type="button" class="btn btn-secondary" v-on:click="hideDangerPopup()">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete">{{ $t('btn.delete') }}</button>
+        <button type="button" class="btn btn-secondary" v-on:click="hideDangerPopup()">{{ $t('btn.cancel') }}</button>
       </template>
     </PopupAlert>
     <form-slot ref="formSlot">
-      <template v-slot:header>Add Category</template>
+      <template v-slot:header>{{ $t('title.add_category') }}</template>
       <template v-slot:main>
         <form action="" method="post" @submit.prevent="submitForm">
           <div class="form-group">
-            <label>Name</label>
+            <label>{{ $t('lbl.name') }}</label>
             <input type="text" name="name" v-model="form.name" class="form-control">
           </div>
           <div class="form-group">
-            <label>Parent category</label>
+            <label>{{ $t('lbl.parent_cat') }}</label>
             <select name="parent" class="form-control" v-model="form.parent">
               <option v-for="parent in catsList" v-bind:key="parent.id" v-bind:value="parent.id">{{ parent.name }}</option>
             </select>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="reset" class="btn btn-info" v-on:click="hideForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ $t('btn.save') }}</button>
+            <button type="reset" class="btn btn-info" v-on:click="hideForm()">{{ $t('btn.cancel') }}</button>
           </div>
         </form>
       </template>
     </form-slot>
     <div class="grid-toolbar">
-      <button class="btn btn-primary" v-on:click="addCategory()">Add category</button>
+      <button class="btn btn-primary" v-on:click="addCategory()">{{ $t('btn.add_cat') }}</button>
     </div>
     <div class="row">
       <div class="col-lg-12">
