@@ -54,6 +54,10 @@ export const actions = {
           return reject(err)
       })
     })
+  },
+
+  store({ dispatch, commit }, form) {
+    return this.$axios.post('/users/admin/user', form)
   }
 
 }

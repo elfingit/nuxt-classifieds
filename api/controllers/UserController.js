@@ -100,6 +100,10 @@ class UserController {
       return res.status(500).end()
     })
   }
+
+  static adminStore(req, res) {
+
+  }
 }
 
 module.exports = UserController

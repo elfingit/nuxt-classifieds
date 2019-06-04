@@ -113,7 +113,27 @@
 
         this.$refs.formSlot.show()
 
+      },
+
+      async submitForm() {
+        this.$el
+          .querySelector("form")
+          .querySelectorAll("small")
+          .forEach(el => {
+            el.remove();
+          });
+        await this.$store.dispatch("user/store", this.form)
+          .then(this.success)
+          .catch(this.error)
+      },
+
+      success() {
+
+      },
+      error() {
+
       }
+
     }
 
   }

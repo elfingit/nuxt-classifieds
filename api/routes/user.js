@@ -15,4 +15,8 @@ router.get('/', [acl, (req, res) => {
   return UserController.list(req, res)
 }])
 
+router.post('/admin/store', [acl, empty_body, (req, res) => {
+  return UserController.adminStore(req, res)
+}])
+
 module.exports = router
