@@ -6,6 +6,7 @@ const nuxt_options = require('./nuxt.config')
 const userRoute = require('./api/routes/user')
 const authRoute = require('./api/routes/auth')
 const categoryRoute = require('./api/routes/categories')
+const userRoleRoute = require('./api/routes/user_roles')
 
 const cookieParser = require('cookie-parser')
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 app.use('/users', userRoute)
 app.use('/auth', authRoute)
 app.use('/categories', categoryRoute)
+app.use('/user_roles', userRoleRoute)
 
 // We instantiate Nuxt.js with the options
 const isProd = process.env.NODE_ENV === 'production'
