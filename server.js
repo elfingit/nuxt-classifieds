@@ -12,7 +12,24 @@ const cookieParser = require('cookie-parser')
 
 require('dotenv').config()
 
-app.use(cookieParser(process.env.APP_SECRET_KEY))
+const { schema_loader, schemas_instancer } = require('./lib/schema_loader')
+
+schema_loader(__dirname + '/schemas')
+  .then((schemas) => {
+
+    return schemas_instancer(schemas, app)
+
+  }).then(() => {
+
+    //console.dir(app.get('schemas'))
+    process.exit()
+
+  }).catch((err) => {
+    console.error(err)
+    process.exit()
+  })
+
+/*app.use(cookieParser(process.env.APP_SECRET_KEY))
 app.use(bodyParser.json())
 
 app.use('/users', userRoute)
@@ -30,4 +47,4 @@ if (!isProd) {
 }
 app.use(nuxt.render)
 app.listen(3000)
-console.log('Server is listening on http://localhost:3000')
+console.log('Server is listening on http://localhost:3000')*/
