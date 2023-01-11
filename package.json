@@ -15,7 +15,7 @@
   "dependencies": {
     "bookshelf": "^0.14.2",
     "dotenv": "^8.0.0",
-    "knex": "0.19",
+    "knex": "2.4",
     "nuxt": "^2.0.0",
     "pg": "^7.10.0"
   },
